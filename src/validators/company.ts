@@ -186,3 +186,26 @@ export const companySchema = z.object({
 export type CompanyInput = z.infer<
   typeof companySchema
 >;
+export const companyStatusSchema = z.object({
+  companyId: z
+    .string()
+    .uuid("Identificador da empresa inválido."),
+
+  status: z.enum([
+    "active",
+    "suspended",
+    "cancelled",
+  ]),
+
+  reason: z
+    .string()
+    .trim()
+    .min(
+      5,
+      "Informe uma justificativa com pelo menos 5 caracteres.",
+    )
+    .max(
+      1000,
+      "A justificativa ultrapassou o limite permitido.",
+    ),
+});
