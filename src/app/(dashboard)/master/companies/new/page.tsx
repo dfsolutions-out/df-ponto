@@ -4,6 +4,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { CompanyForm } from "@/components/master/CompanyForm";
+
 export default function NewCompanyPage() {
   return (
     <main className="px-5 py-8 sm:px-7 lg:px-10 lg:py-10">
@@ -20,7 +22,7 @@ export default function NewCompanyPage() {
           Voltar para empresas
         </Link>
 
-        <section className="mt-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-7 sm:p-10">
+        <header className="mt-6">
           <div className="flex size-14 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-500/10 text-blue-400">
             <Building2
               aria-hidden="true"
@@ -28,17 +30,23 @@ export default function NewCompanyPage() {
             />
           </div>
 
-          <h1 className="mt-6 text-3xl font-bold tracking-tight">
+          <p className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-blue-400">
+            Empresa cliente
+          </p>
+
+          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             Nova empresa
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            A estrutura do painel está pronta. Na próxima etapa
-            criaremos o formulário completo, as validações, a Server
-            Action, a auditoria e o cadastro do primeiro administrador
-            da empresa.
+            Cadastre uma nova empresa cliente. Ela será criada
+            inicialmente com status ativo.
           </p>
-        </section>
+        </header>
+
+        <div className="mt-8">
+          <CompanyForm />
+        </div>
       </div>
     </main>
   );
