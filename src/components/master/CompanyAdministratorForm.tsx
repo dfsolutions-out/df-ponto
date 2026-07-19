@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { createCompanyAdministratorAction } from "@/actions/company-users";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import type { CompanyUserActionState } from "@/types/company-user";
 import { formatPhone } from "@/utils/company";
@@ -56,8 +57,8 @@ export function CompanyAdministratorForm({
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          Caso o e-mail já exista na plataforma, o mesmo login
-          será vinculado a esta empresa.
+          Caso o e-mail já exista na plataforma, o mesmo login será
+          vinculado a esta empresa.
         </p>
 
         <div className="mt-7 grid gap-5 md:grid-cols-2">
@@ -80,11 +81,24 @@ export function CompanyAdministratorForm({
               autoComplete="name"
               placeholder="Nome completo"
               aria-invalid={Boolean(error("fullName"))}
-              className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              aria-describedby={
+                error("fullName")
+                  ? "fullName-error"
+                  : undefined
+              }
+              className={[
+                "h-12 w-full rounded-xl border bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600",
+                error("fullName")
+                  ? "border-red-500/60 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
+                  : "border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
+              ].join(" ")}
             />
 
             {error("fullName") ? (
-              <p className="mt-2 text-sm text-red-400">
+              <p
+                id="fullName-error"
+                className="mt-2 text-sm text-red-400"
+              >
                 {error("fullName")}
               </p>
             ) : null}
@@ -107,13 +121,27 @@ export function CompanyAdministratorForm({
               maxLength={320}
               autoComplete="email"
               autoCapitalize="none"
+              spellCheck={false}
               placeholder="administrador@empresa.com.br"
               aria-invalid={Boolean(error("email"))}
-              className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              aria-describedby={
+                error("email")
+                  ? "email-error"
+                  : undefined
+              }
+              className={[
+                "h-12 w-full rounded-xl border bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600",
+                error("email")
+                  ? "border-red-500/60 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
+                  : "border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
+              ].join(" ")}
             />
 
             {error("email") ? (
-              <p className="mt-2 text-sm text-red-400">
+              <p
+                id="email-error"
+                className="mt-2 text-sm text-red-400"
+              >
                 {error("email")}
               </p>
             ) : null}
@@ -137,16 +165,29 @@ export function CompanyAdministratorForm({
               autoComplete="tel"
               placeholder="(21) 99999-9999"
               aria-invalid={Boolean(error("phone"))}
+              aria-describedby={
+                error("phone")
+                  ? "phone-error"
+                  : undefined
+              }
               onInput={(event) => {
                 event.currentTarget.value = formatPhone(
                   event.currentTarget.value,
                 );
               }}
-              className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              className={[
+                "h-12 w-full rounded-xl border bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600",
+                error("phone")
+                  ? "border-red-500/60 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
+                  : "border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
+              ].join(" ")}
             />
 
             {error("phone") ? (
-              <p className="mt-2 text-sm text-red-400">
+              <p
+                id="phone-error"
+                className="mt-2 text-sm text-red-400"
+              >
                 {error("phone")}
               </p>
             ) : null}
@@ -164,9 +205,8 @@ export function CompanyAdministratorForm({
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          A senha será usada apenas quando o e-mail ainda não
-          possuir uma conta. O usuário deverá alterá-la no
-          primeiro acesso.
+          A senha será usada apenas quando o e-mail ainda não possuir
+          uma conta. O usuário deverá alterá-la no primeiro acesso.
         </p>
 
         <div className="mt-7 grid gap-5 md:grid-cols-2">
@@ -179,23 +219,29 @@ export function CompanyAdministratorForm({
               <span className="ml-1 text-blue-400">*</span>
             </label>
 
-            <input
+            <PasswordInput
               id="temporaryPassword"
               name="temporaryPassword"
-              type="password"
               required
               minLength={8}
               maxLength={128}
               autoComplete="new-password"
               placeholder="Mínimo de 8 caracteres"
-              aria-invalid={Boolean(
+              error={Boolean(
                 error("temporaryPassword"),
               )}
-              className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              aria-describedby={
+                error("temporaryPassword")
+                  ? "temporaryPassword-error"
+                  : undefined
+              }
             />
 
             {error("temporaryPassword") ? (
-              <p className="mt-2 text-sm text-red-400">
+              <p
+                id="temporaryPassword-error"
+                className="mt-2 text-sm text-red-400"
+              >
                 {error("temporaryPassword")}
               </p>
             ) : null}
@@ -210,29 +256,42 @@ export function CompanyAdministratorForm({
               <span className="ml-1 text-blue-400">*</span>
             </label>
 
-            <input
+            <PasswordInput
               id="confirmTemporaryPassword"
               name="confirmTemporaryPassword"
-              type="password"
               required
               minLength={8}
               maxLength={128}
               autoComplete="new-password"
               placeholder="Repita a senha provisória"
-              aria-invalid={Boolean(
+              error={Boolean(
                 error("confirmTemporaryPassword"),
               )}
-              className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              aria-describedby={
+                error("confirmTemporaryPassword")
+                  ? "confirmTemporaryPassword-error"
+                  : undefined
+              }
             />
 
             {error("confirmTemporaryPassword") ? (
-              <p className="mt-2 text-sm text-red-400">
+              <p
+                id="confirmTemporaryPassword-error"
+                className="mt-2 text-sm text-red-400"
+              >
                 {error(
                   "confirmTemporaryPassword",
                 )}
               </p>
             ) : null}
           </div>
+        </div>
+
+        <div className="mt-5 rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3">
+          <p className="text-xs leading-5 text-slate-500">
+            A senha deve possuir pelo menos 8 caracteres, incluindo
+            uma letra maiúscula, uma letra minúscula e um número.
+          </p>
         </div>
       </section>
 

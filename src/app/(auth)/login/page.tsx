@@ -9,18 +9,11 @@ export default async function LoginPage() {
   const { data: claimsData } =
     await supabase.auth.getClaims();
 
-  const userId = claimsData?.claims?.sub;
+  const userId =
+    claimsData?.claims?.sub;
 
   if (userId) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("is_master, is_active")
-      .eq("id", userId)
-      .single();
-
-    if (profile?.is_master && profile.is_active) {
-      redirect("/master");
-    }
+    redirect("/access");
   }
 
   return (
@@ -38,7 +31,7 @@ export default async function LoginPage() {
               </p>
 
               <p className="text-xs text-slate-400">
-                Administração da plataforma
+                Controle digital de jornada
               </p>
             </div>
           </div>
@@ -49,12 +42,11 @@ export default async function LoginPage() {
             </p>
 
             <h1 className="mt-3 text-3xl font-bold tracking-tight">
-              Entrar no painel
+              Entrar no sistema
             </h1>
 
             <p className="mt-3 text-sm leading-6 text-slate-400">
-              Utilize suas credenciais administrativas para
-              acessar o DF Ponto.
+              Utilize suas credenciais para acessar o DF Ponto.
             </p>
           </div>
 

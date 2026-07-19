@@ -7,6 +7,7 @@ import {
   MapPin,
   Phone,
   UserRound,
+  Users,
   WalletCards,
 } from "lucide-react";
 import Link from "next/link";
@@ -14,6 +15,7 @@ import { notFound } from "next/navigation";
 
 import { CompanyStatusForm } from "@/components/master/CompanyStatusForm";
 import { getCompanyById } from "@/services/companies";
+import { getCompanyMembers } from "@/services/company-users";
 import {
   formatCnpj,
   formatCompanyStatus,
@@ -48,7 +50,10 @@ export default async function CompanyDetailsPage({
   const { id } = await params;
   const query = await searchParams;
 
-  const company = await getCompanyById(id);
+  const [company, members] = await Promise.all([
+    getCompanyById(id),
+    getCompanyMembers(id),
+  ]);
 
   if (!company) {
     notFound();
@@ -104,13 +109,27 @@ export default async function CompanyDetailsPage({
             </div>
           </div>
 
-          <Link
-            href={`/master/companies/${company.id}/edit`}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-700 px-5 text-sm font-semibold text-slate-300 transition hover:bg-slate-800"
-          >
-            <Edit3 className="size-4" />
-            Editar empresa
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href={`/master/companies/${company.id}/users`}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500"
+            >
+              <Users className="size-4" />
+              Gerenciar usuários
+
+              <span className="rounded-full bg-white/15 px-2 py-0.5 text-xs">
+                {members.length}
+              </span>
+            </Link>
+
+            <Link
+              href={`/master/companies/${company.id}/edit`}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-700 px-5 text-sm font-semibold text-slate-300 transition hover:bg-slate-800"
+            >
+              <Edit3 className="size-4" />
+              Editar empresa
+            </Link>
+          </div>
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
@@ -123,11 +142,13 @@ export default async function CompanyDetailsPage({
               <div className="mt-6 grid gap-5 md:grid-cols-2">
                 <div className="flex gap-3">
                   <Mail className="mt-0.5 size-5 text-slate-600" />
+
                   <div>
                     <p className="text-xs text-slate-600">
                       E-mail
                     </p>
-                    <p className="mt-1 text-sm text-slate-300">
+
+                    <p className="mt-1 break-all text-sm text-slate-300">
                       {company.email}
                     </p>
                   </div>
@@ -135,10 +156,12 @@ export default async function CompanyDetailsPage({
 
                 <div className="flex gap-3">
                   <Phone className="mt-0.5 size-5 text-slate-600" />
+
                   <div>
                     <p className="text-xs text-slate-600">
                       Telefone
                     </p>
+
                     <p className="mt-1 text-sm text-slate-300">
                       {formatPhone(company.phone)}
                     </p>
@@ -147,17 +170,21 @@ export default async function CompanyDetailsPage({
 
                 <div className="flex gap-3">
                   <UserRound className="mt-0.5 size-5 text-slate-600" />
+
                   <div>
                     <p className="text-xs text-slate-600">
                       Responsável
                     </p>
+
                     <p className="mt-1 text-sm text-slate-300">
                       {company.responsibleName}
                     </p>
-                    <p className="mt-1 text-xs text-slate-600">
+
+                    <p className="mt-1 break-all text-xs text-slate-600">
                       {company.responsibleEmail ??
                         "E-mail não informado"}
                     </p>
+
                     <p className="mt-1 text-xs text-slate-600">
                       {company.responsiblePhone
                         ? formatPhone(
@@ -170,10 +197,12 @@ export default async function CompanyDetailsPage({
 
                 <div className="flex gap-3">
                   <WalletCards className="mt-0.5 size-5 text-slate-600" />
+
                   <div>
                     <p className="text-xs text-slate-600">
                       Valor por funcionário ativo
                     </p>
+
                     <p className="mt-1 text-sm font-semibold text-slate-300">
                       {formatCurrency(
                         company.pricePerActiveEmployee,
@@ -184,10 +213,12 @@ export default async function CompanyDetailsPage({
 
                 <div className="flex gap-3 md:col-span-2">
                   <MapPin className="mt-0.5 size-5 text-slate-600" />
+
                   <div>
                     <p className="text-xs text-slate-600">
                       Endereço
                     </p>
+
                     <p className="mt-1 text-sm text-slate-300">
                       {company.street},{" "}
                       {company.streetNumber}
@@ -195,6 +226,7 @@ export default async function CompanyDetailsPage({
                         ? ` - ${company.addressComplement}`
                         : ""}
                     </p>
+
                     <p className="mt-1 text-xs text-slate-600">
                       {company.district} — {company.city}/
                       {company.state}
@@ -224,7 +256,35 @@ export default async function CompanyDetailsPage({
           <div className="space-y-6">
             <article className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
               <div className="flex items-center gap-3">
+                <Users className="size-5 text-blue-400" />
+
+                <h2 className="font-semibold">
+                  Usuários vinculados
+                </h2>
+              </div>
+
+              <p className="mt-4 text-3xl font-bold">
+                {members.length}
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                Usuários com vínculo cadastrado nesta
+                empresa.
+              </p>
+
+              <Link
+                href={`/master/companies/${company.id}/users`}
+                className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 px-4 text-sm font-semibold text-blue-300 transition hover:bg-blue-500/20 hover:text-blue-200"
+              >
+                <Users className="size-4" />
+                Abrir gerenciamento
+              </Link>
+            </article>
+
+            <article className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
+              <div className="flex items-center gap-3">
                 <CalendarDays className="size-5 text-blue-400" />
+
                 <h2 className="font-semibold">
                   Histórico cadastral
                 </h2>
@@ -235,6 +295,7 @@ export default async function CompanyDetailsPage({
                   <p className="text-xs text-slate-600">
                     Criada em
                   </p>
+
                   <p className="mt-1 text-slate-300">
                     {formatDate(company.createdAt)}
                   </p>
@@ -244,6 +305,7 @@ export default async function CompanyDetailsPage({
                   <p className="text-xs text-slate-600">
                     Última atualização
                   </p>
+
                   <p className="mt-1 text-slate-300">
                     {formatDate(company.updatedAt)}
                   </p>

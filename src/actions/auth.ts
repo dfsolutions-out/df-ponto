@@ -24,11 +24,13 @@ export async function loginAction(
   });
 
   if (!validation.success) {
-    const errors = validation.error.flatten().fieldErrors;
+    const errors =
+      validation.error.flatten().fieldErrors;
 
     return {
       success: false,
-      message: "Revise os campos destacados.",
+      message:
+        "Revise os campos destacados.",
       fieldErrors: {
         email: errors.email,
         password: errors.password,
@@ -57,7 +59,8 @@ export async function loginAction(
     error: claimsError,
   } = await supabase.auth.getClaims();
 
-  const userId = claimsData?.claims?.sub;
+  const userId =
+    claimsData?.claims?.sub;
 
   if (claimsError || !userId) {
     await supabase.auth.signOut();
@@ -75,7 +78,9 @@ export async function loginAction(
     error: profileError,
   } = await supabase
     .from("profiles")
-    .select("is_master, is_active, must_change_password")
+    .select(
+      "is_active, must_change_password",
+    )
     .eq("id", userId)
     .single();
 
@@ -101,18 +106,11 @@ export async function loginAction(
     };
   }
 
-  if (!profile.is_master) {
-    await supabase.auth.signOut();
-
-    return {
-      success: false,
-      message:
-        "Este painel está disponível apenas para administradores Master.",
-      fieldErrors: {},
-    };
+  if (profile.must_change_password) {
+    redirect("/change-password");
   }
 
-  redirect("/master");
+  redirect("/access");
 }
 
 export async function logoutAction(): Promise<void> {

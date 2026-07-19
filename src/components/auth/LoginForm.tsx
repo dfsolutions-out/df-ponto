@@ -6,6 +6,7 @@ import {
   loginAction,
   type LoginActionState,
 } from "@/actions/auth";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
 const initialLoginState: LoginActionState = {
@@ -20,11 +21,17 @@ export function LoginForm() {
     initialLoginState,
   );
 
-  const emailError = state.fieldErrors.email?.[0];
-  const passwordError = state.fieldErrors.password?.[0];
+  const emailError =
+    state.fieldErrors.email?.[0];
+
+  const passwordError =
+    state.fieldErrors.password?.[0];
 
   return (
-    <form action={formAction} className="mt-8 space-y-5">
+    <form
+      action={formAction}
+      className="mt-8 space-y-5"
+    >
       {state.message ? (
         <div
           role="alert"
@@ -53,10 +60,17 @@ export function LoginForm() {
           maxLength={320}
           aria-invalid={Boolean(emailError)}
           aria-describedby={
-            emailError ? "email-error" : undefined
+            emailError
+              ? "email-error"
+              : undefined
           }
-          placeholder="seuemail@dfsolutions.ind.br"
-          className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+          placeholder="seuemail@empresa.com.br"
+          className={[
+            "h-12 w-full rounded-xl border bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600",
+            emailError
+              ? "border-red-500/60 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
+              : "border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
+          ].join(" ")}
         />
 
         {emailError ? (
@@ -77,19 +91,19 @@ export function LoginForm() {
           Senha
         </label>
 
-        <input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           autoComplete="current-password"
           required
           maxLength={128}
-          aria-invalid={Boolean(passwordError)}
+          error={Boolean(passwordError)}
           aria-describedby={
-            passwordError ? "password-error" : undefined
+            passwordError
+              ? "password-error"
+              : undefined
           }
           placeholder="Digite sua senha"
-          className="h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
         />
 
         {passwordError ? (
