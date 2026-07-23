@@ -1075,5 +1075,5 @@ export async function getEmployeeTimesheetMonth(
 }
 
 export function getCurrentBrazilDate(): string {
-  return getBrazilDateString();
+  return getBrazilDateString()
 }
